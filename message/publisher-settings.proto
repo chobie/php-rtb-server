@@ -1,0 +1,54 @@
+// Copyright 2012 Google Inc. All Rights Reserved.
+
+// A set of publisher settings specific to a RTB Network.
+message PublisherSettingsList {
+  repeated PublisherSettings publisher_settings = 1;
+}
+
+// A collection of settings that applies to a publisher's web property or
+// channel.
+message PublisherSettings {
+  // This field is deprecated and should not be used. Please use the fixed64 id
+  // field instead.
+  required bytes DEPRECATED_id = 1;
+
+  // Identifies the web property and channel to which these settings apply.
+  // This field corresponds to publisher_settings_list_id in the BidRequest
+  // or BidRequest.AdSlot.
+  optional fixed64 id = 10;
+
+  // These landing page URLs are blocked by the seller for all ad slots marked
+  // with this id. They should be matched by substring.
+  repeated string excluded_url = 2;
+
+  // Disallowed sensitive ad categories. This field corresponds to
+  // excluded_sensitive_category in the BidRequest. See the
+  // ad-sensitive-categories.txt file in the technical documentation for a list
+  // of sensitive ad categories.
+  repeated string DEPRECATED_excluded_sensitive_category = 3;
+  repeated int32 excluded_sensitive_category = 9;
+
+  // Disallowed product categories. This field corresponds to
+  // excluded_product_category in the BidRequest.
+  repeated int32 excluded_product_category = 8;
+
+  // Disallowed attribute ids for the ads that can show in this
+  // slot. See the creative-attributes.txt file in the technical
+  // documentation for a list of ids.
+  repeated int32 excluded_attribute = 4;
+
+  // Allowed vendor types. See the vendors.txt file in the technical
+  // documentation for a list of ids.
+  repeated int32 allowed_vendor_type = 5;
+
+  // This field is deprecated and should not be used.
+  repeated int32 DEPRECATED_excluded_vertical = 6;
+
+  // Whether the publisher allows the user's ip to be passed to RTB networks.
+  optional bool can_send_ip = 7 [default = true];
+
+  // The languages that are allowed to be shown on the publisher's site.
+  // Each language is a Language Code, such as 'en' or 'pt-BR', as defined by
+  // Unicode's "CLDR" (http://unicode.org/cldr/)
+  repeated string allowed_language = 11;
+}

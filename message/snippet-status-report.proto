@@ -1,0 +1,210 @@
+// Copyright 2012 Google Inc. All Rights Reserved.
+
+message SnippetStatusItem {
+  // Possible approval statuses.
+  enum Status {
+    UNKNOWN = 0;
+    NOT_CHECKED = 1;
+    APPROVED = 2;
+    DISAPPROVED = 3;
+  }
+
+  enum DisapprovalReason {
+    // The length of the image animation is longer than allowed.
+    LENGTH_OF_IMAGE_ANIMATION = 0;
+    // The click through url doesn't work properly.
+    BROKEN_URL = 1;
+    // Something is wrong with the creative itself.
+    MEDIA_NOT_FUNCTIONAL = 2;
+    // The ad makes a fourth party call to an unapproved vendor.
+    INVALID_FOURTH_PARTY_CALL = 3;
+    // The ad targets consumers using remarketing lists and/or collects
+    // data for subsequent use in retargeting, but does not correctly declare
+    // that use.
+    INCORRECT_REMARKETING_DECLARATION = 4;
+    // Clicking on the ad leads to an error page.
+    LANDING_PAGE_ERROR = 5;
+    // The ad size when rendered does not match the declaration.
+    AD_SIZE_DOES_NOT_MATCH_AD_SLOT = 6;
+    // Ads with a white background require a border, which was missing.
+    NO_BORDER = 7;
+    // The creative attempts to set cookies from a fourth party that is not
+    // certified.
+    FOURTH_PARTY_BROWSER_COOKIES = 8;
+    // The creative sets an LSO object.
+    LSO_OBJECTS = 9;
+    // The ad serves a blank.
+    BLANK_CREATIVE = 10;
+    // The ad uses rotation, but not all destination urls were declared.
+    DESTINATION_URLS_UNDECLARED = 11;
+    // There is a problem with the way the click macro is used.
+    PROBLEM_WITH_CLICK_MACRO = 12;
+    // The ad technology declaration is not accurate.
+    INCORRECT_AD_TECHNOLOGY_DECLARATION = 13;
+    // The actual destination url does not match the declared destination url.
+    INCORRECT_DESTINATION_URL_DECLARATION = 14;
+    // The declared expanding direction does not match the actual direction.
+    EXPANDABLE_INCORRECT_DIRECTION = 15;
+    // The ad does not expand in a supported direction.
+    EXPANDABLE_DIRECTION_NOT_SUPPORTED = 16;
+    // The ad uses an expandable vendor that is not supported.
+    EXPANDABLE_INVALID_VENDOR = 17;
+    // There was an issue with the expandable ad.
+    EXPANDABLE_FUNCTIONALITY = 18;
+    // The ad uses a video vendor that is not supported.
+    VIDEO_INVALID_VENDOR = 19;
+    // The length of the video ad is not supported.
+    VIDEO_UNSUPPORTED_LENGTH = 20;
+    // The format of the video ad is not supported.
+    VIDEO_UNSUPPORTED_FORMAT = 21;
+    // There was an issue with the video ad.
+    VIDEO_FUNCTIONALITY = 22;
+    // The landing page does not conform to Ad Exchange policy.
+    LANDING_PAGE_DISABLED = 23;
+    // The ad may contain malware.
+    MALWARE_SUSPECTED = 24;
+    // The ad contains adult images or video content.
+    ADULT_IMAGE_OR_VIDEO = 25;
+    // The ad contains text that is unclear or inaccurate.
+    INACCURATE_AD_TEXT = 26;
+    // The ad promotes counterfeit designer goods.
+    COUNTERFEIT_DESIGNER_GOODS = 27;
+    // The ad causes a popup window to appear.
+    POP_UP = 28;
+    // The creative does not follow policies set for the RTB protocol.
+    INVALID_RTB_PROTOCOL_USAGE = 29;
+    // The ad contains a URL that uses a numeric IP address for the domain.
+    RAW_IP_ADDRESS_IN_SNIPPET = 30;
+    // The ad or landing page contains unacceptable content because it initiated
+    // a software or executable download.
+    UNACCEPTABLE_CONTENT_SOFTWARE = 31;
+    // The ad set an unauthorized cookie on a Google domain.
+    UNAUTHORIZED_COOKIE_ON_GOOGLE_DOMAIN = 32;
+    // Flash content found when no flash was declared.
+    UNDECLARED_FLASH_OBJECTS = 33;
+    // SSL support declared but not working correctly.
+    INVALID_SSL_DECLARATION = 34;
+    // Rich Media - Direct Download in Ad (ex. PDF download).
+    DIRECT_DOWNLOAD_IN_AD = 35;
+    // Invalid creative download size (ex. initial download size too large).
+    INVALID_CREATIVE_DOWNLOAD_SIZE = 36;
+    // Bad Destination Url: Site Not Crawlable.
+    DESTINATION_URL_SITE_NOT_CRAWLABLE = 37;
+    // Bad Url: Legal disapproval.
+    BAD_URL_LEGAL_DISAPPROVAL = 38;
+    // Pharmaceuticals, Gambling, Alcohol not allowed and at least one was
+    // detected.
+    PHARMA_GAMBLING_ALCOHOL_NOT_ALLOWED = 39;
+    // Dynamic DNS at Destination url.
+    DYNAMIC_DNS_AT_DESTINATION_URL = 40;
+  }
+
+  enum CorrectionType {
+    // The ad's declared vendors did not match the vendors that were detected.
+    VENDOR_IDS = 1;
+    // The ad had the SSL attribute declared but was not SSL-compliant.
+    SSL_ATTRIBUTE = 2;
+    // The ad was declared as Flash-free but contained Flash.
+    FLASH_ATTRIBUTE = 3;
+  }
+
+  // Assigned approval status.
+  optional Status status = 1 [default = NOT_CHECKED];
+
+  // Whether the ad comes from the Adx UI or an RTB ad.
+  enum Source {
+    RTB = 0;
+    UI = 1;
+  }
+  optional Source source = 8;
+
+  // Creative ID assigned by customer. This field is set only for RTB ads.
+  optional string buyer_creative_id = 2;
+
+  // Creative ID assigned by Google. This field is set only for UI ads.
+  optional string creative_id = 9;
+
+  // The dimensions of the creative.
+  optional int32 width = 3;
+  optional int64 height = 4;
+
+  // Advertisers we've classified for this creative.
+  repeated int64 advertiser_id = 5;
+
+  // The declared click through urls for this creative.
+  repeated string click_through_url = 11;
+
+  // The detected sensitive categories for this creative. See
+  // ad-sensitive-categories.txt file in the technical documentation for a
+  // list of ids. You should use these ids along with the
+  // excluded_sensitive_category field in the bid request to filter your bids.
+  repeated int32 detected_sensitive_category = 6;
+
+  // The detected product categories for this creative. See
+  // ad-product-categories.txt file in the technical documentation for a
+  // list of ids. You should use these ids along with the
+  // excluded_product_category field in the bid request to filter your bids.
+  repeated int32 detected_product_category = 7;
+
+  // Whether the snippet is SSL-capable (has declared attribute 47
+  // RichMediaCapabilityType: RichMediaCapabilitySSL).
+  optional bool is_ssl_capable = 15;
+
+  // This field is deprecated. Use the submessage field instead.
+  repeated DisapprovalReason DEPRECATED_disapproval_reason = 10;
+
+  message Disapproval {
+    // The categorized reason for disapproval.
+    optional DisapprovalReason reason = 1;
+
+    // Additional details about the reason for disapproval.
+    repeated string detail = 2;
+  }
+
+  // The reasons for disapproval, if any. Note that not all disapproval reasons
+  // may be categorized, so it is possible for the creative to have a status
+  // of DISAPPROVED with an empty list of disapproval_reasons. In this case,
+  // please reach out to your TAM to help debug the issue.
+  repeated Disapproval disapproval_reason = 12;
+
+  message Correction {
+    // The type of correction that was applied to the snippet.
+    optional CorrectionType type = 1;
+
+    // Additional details about what was corrected.
+    repeated string detail = 2;
+  }
+
+  // The corrections that were applied to the snippet, if any.
+  repeated Correction snippet_correction = 13;
+
+  // Top filtering reasons for this snippet during a period of a single day
+  // (from midnight to midnight Pacific).
+  message SnippetFiltering {
+    // The day during which the data was collected. Typically the date
+    // representing 'yesterday'. The date is in the ISO 8601 format: 'YYYY-MM-DD'.
+    optional string date = 1;
+
+    // A specific filtering reason. Please refer to "creative-status-codes.txt"
+    // in the Downloads section for the status codes. The count is aggregated
+    // across all publishers on the exchange.
+    message FilteringItem {
+      optional int32 filtering_status = 1;
+      optional int64 filtering_count = 2;
+    }
+    repeated FilteringItem item = 2;
+  }
+
+  // Reasons for which the snippet was filtered before reaching the auction or
+  // lost in the auction.
+  optional SnippetFiltering snippet_filtering = 14;
+}
+
+// The main report protocol for snippet status reports. The report body is a
+// serialized instance of this type.
+message SnippetStatusReport {
+  // One message per snippet. The snippet depends on buyer_creative_id as well
+  // as the creative dimensions. Each creative remains in the snippet status
+  // report for 3 days after the customer stops sending it to Google.
+  repeated SnippetStatusItem snippet_status = 1;
+}
